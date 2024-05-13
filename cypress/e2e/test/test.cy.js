@@ -3,7 +3,12 @@ import { mobileReplenishment } from "../../support/pages/mobileReplenishment";
 import { transfers } from "../../support/pages/transfers";
 import { basePage } from "../../support/pages/basePage";
 
-it.skip("Replenishment of Ukraine mobile phone number", () => {
+beforeEach('setup success responce with stub', ()=> {
+    cy.intercept('https://next.privat24.ua/api/p24/pub/confirm/check?lang=en',
+        {fixture: 'confirmResponse/success.json'})
+})
+
+it.only("Replenishment of Ukraine mobile phone number", () => {
   basePage.open("https://next.privat24.ua/mobile?lang=en");
 
   mobileReplenishment.typePhoneNumber("993951069");
@@ -15,9 +20,11 @@ it.skip("Replenishment of Ukraine mobile phone number", () => {
   // mobileReplenishment.checkDebitAmount('2 UAH');
   mobileReplenishment.checkDebitComission("2");
   mobileReplenishment.checkDebitCurrency("UAH");
+  cy.contains('Pay')
+  .click();
 });
 
-it.skip("Money transfer between foreign cards", () => {
+it("Money transfer between foreign cards", () => {
   basePage.open("https://next.privat24.ua/money-transfer/card?lang=en");
 
   basePage.typeDebitCardData("4552331448138217", "0524", "111");
@@ -37,7 +44,7 @@ it("Example sending the GET request", () => {
 });
 
 // Example HTTP POST request with expect verification
-it.skip("Example sending the POST request", () => {
+it("Example sending the POST request", () => {
   const requestBody = {
     amount: 12,
     phone: "+380993951069",
